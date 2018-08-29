@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+        <link rel="shortcut icon" href="./assets/picture1.png">
+        <title>StackOverflow-Lite</title>
+        <link rel="stylesheet" href="./css/style.css">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+    </head>
+    <body>
+        <div id="container">
+            <div id="title-bar">
+                <div class="logo-name">
+                    <img src="./assets/picture1.png" alt="" id="logo">
+                    <a class="siteName" href="./user.html">StackOverflow-Lite</a>
+                </div>
+                <div class="search-box">
+                    <input id="search-input" type="text" name="keyword" placeholder="Find Question..." />
+                </div>
+                <div id="profile">
+                    <a href="./userprofile.html">View Profile</a>
+                    <a id="logout-link" href="./index.html">Logout</a>
+                </div>
+            </div>
+            <div id="main-content-area">
+                <div id="feature-panel">
+                    <fieldset>
+                        <legend> FEATURES</legend>
+                        <div id="features">
+                            <p>
+                            <a id="home" href="./user.html">Home</a>
+                            <p>
+                            <a id="all-questions" href="#">View all questions asked</a>
+                            <p>
+                            <a id="recent-questions" href="#">Recently asked questions</a>
+                            <p>
+                            <a id="addquestion" href="#"> Add a Question</a>
+                        </div>
+                    </fieldset>
+                </div>
+                <div id="main-content-container">
+
+                </div>
+                <div id="info" class="server-info" style="display: none;">
+                    <div class="modal-area">
+                      <span class="cancel">&times;</span>
+                      <div id="modal-info-panel"></div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div id="footer">
+             &copy; Copyright 2018. <a href="https://nweze-stackoverflow.herokuapp.com/">stackoverflow-Lite</a>
+        </div>
+        <script src="./js/helpers.js"></script>
+        <script src="./js/user.js"></script>
+    </body>
+</html>

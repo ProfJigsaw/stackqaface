@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+        <link rel="shortcut icon" href="./assets/picture1.png">
+        <title>StackOverflow-Lite</title>
+        <link rel="stylesheet" href="./css/gueststyle.css">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
+    </head>
+    <body>
+        <div id="container">
+            <div id="title-bar">
+                <div class="logo-name">
+                    <img src="./assets/picture1.png" alt="" id="logo">
+                    <a class="siteName" href="./index.html">StackOverflow-Lite</a>
+                </div>
+                <div id="home-about">
+                    <a href="./index.html">Home</a> <a href="#">About</a>
+                </div>
+            </div>
+            <div id="main-content-area">
+                   <div id="signupform">
+                        <h3 id="loginformheader">Sign Up Form</h3>
+                        <form action="#" method="#">
+                            <p>Enter Username:</p>
+                            <input type="text" name="username" id="username" placeholder="Enter username" />
+                            <br>
+                            <br>
+                            <p>Enter email:</p>
+                            <input type="text" name="email" id="email" placeholder="Enter your email" />
+                            <br>
+                            <br>
+                            <p>Enter a Password:</p>
+                            <input type="password" name="password" id="password" placeholder="Enter your password" />
+                            <br>
+                            <br>
+                            <button type="submit" name="submit" id="submit">Sign Up</button>
+                            <img src="./assets/loader2.gif" alt="loader" id="loader" style="display: none;" >
+                            <p> 
+                            Have an account? <br> <a href="./login.html">Login instead</a>
+                            </p>
+                            <div id="info" class="server-info" style="display: none;">
+                                <div class="modal-area">
+                                  <span class="cancel">&times;</span>
+                                  <div id="modal-info-panel"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+        </div>
+        <div id="footer">
+            &copy; Copyright 2018. <a href="https://nweze-stackoverflow.herokuapp.com/">stackoverflow-Lite</a>
+        </div>
+        <script src="./js/signup.js"></script>
+    </body>
+</html>
