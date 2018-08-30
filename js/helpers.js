@@ -40,6 +40,7 @@ const makeMyQuestion = (qobj) => {
 
 // helper function to get question thread
 const questionThread = (id) => {
+	console.log('question thread was called');
 	fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${id}`, {
 	  method: 'get',
 	  headers: {
@@ -50,6 +51,7 @@ const questionThread = (id) => {
 	.then((response) => {
     response.json()
     .then((data) => {
+			console.log(data);
     	if(data.success === true){
     		if(data.data.answers) {
 		      	mainContent.innerHTML =  `
@@ -67,6 +69,7 @@ const questionThread = (id) => {
 		          </div>
 				     `;
     		} else {
+					console.log('it got here');
     			mainContent.innerHTML = `
 			      <div id="questions">
 			      <p> User: <strong>${data.data[0].username}</strong> asked</p>
@@ -182,6 +185,7 @@ const postAnswerHelper = (id) => {
 		response.json()
 		.then((data) => {
 			if (data.success === true) {
+				questionThread(id);
 				modal.style.display = "block";
 				document.getElementById('modal-info-panel').innerHTML = data.message;
 			} else {

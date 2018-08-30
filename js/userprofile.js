@@ -34,7 +34,7 @@ myAskedQBtn.addEventListener('click', (e) => {
   .then((response) => {
     response.json()
     .then((data) => {
-      if (data.getstate === true) {
+      if (data.success === true) {
         let questionList = '';
         data.questions.reverse().map((question) => {
           questionList += makeMyQuestion(question);
@@ -68,18 +68,18 @@ myAnsweredQBtn.addEventListener('click', (e) => {
   .then((response) => {
     response.json()
     .then((data) => {
-      if (data.getstate === false) {
+      if (data.success === false) {
         modal.style.display = "block";
         document.getElementById('modal-info-panel').innerHTML = 'No contributions made yet!';
       } else {
         let qResTo = [];
         ansd = [];
-        data.answers.map((ans) => {
+        data.data.answers.map((ans) => {
           ansd.push(ans.questionid);
         })
         ansd = removeArrayDuplictes(ansd);
         ansd.map((id) => {
-          data.questions.map((question) => {
+          data.data.questions.map((question) => {
             if (question.questionid === id) {
               qResTo.push(question);
             }
