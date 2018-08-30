@@ -50,14 +50,14 @@ const questionThread = (id) => {
 	.then((response) => {
     response.json()
     .then((data) => {
-    	if(data.getstate === true){
-    		if(data.astack) {
+    	if(data.success === true){
+    		if(data.data.answers) {
 		      	mainContent.innerHTML =  `
 		      		<div id="questions">
-				      <p> User: <strong>${data.qstack[0].username}</strong> asked</p>
-				      <h3 id="question-returned" questionid="${data.qstack[0].questionid}">${data.qstack[0].question}</h3>
+				      <p> User: <strong>${data.data.question[0].username}</strong> asked</p>
+				      <h3 id="question-returned" questionid="${data.data.question[0].questionid}">${data.data.question[0].question}</h3>
 				      </div>
-				      ${handleAnswers(data.astack)}
+				      ${handleAnswers(data.data.answers)}
 				      <div id="add-answer">
 		            <form method="post" action="/api/v1/questions/{questions.questionId}/answers">
 		              <textarea type="text" name="answer" id="form-answer-input" required></textarea>
@@ -69,8 +69,8 @@ const questionThread = (id) => {
     		} else {
     			mainContent.innerHTML = `
 			      <div id="questions">
-			      <p> User: <strong>${data.qstack[0].username}</strong> asked</p>
-			      <h3 id="question-returned" questionid="${data.qstack[0].questionid}">${data.qstack[0].question}</h3>
+			      <p> User: <strong>${data.data[0].username}</strong> asked</p>
+			      <h3 id="question-returned" questionid="${data.data[0].questionid}">${data.data[0].question}</h3>
 			      </div>		      
 			      <div id="add-answer">
 	            <form method="post" action="/api/v1/questions/{questions.questionId}/answers">
@@ -159,7 +159,7 @@ const acceptAnswerHandler = (qid, aid) => {
 		.then((data) => {
 			questionThread(qid);
 			modal.style.display = "block";
-			return document.getElementById('modal-info-panel').innerHTML = data.msg;
+			return document.getElementById('modal-info-panel').innerHTML = data.message;
 		})
 		.catch((err) => console.log(err));
 	});
@@ -181,13 +181,13 @@ const postAnswerHelper = (id) => {
 	.then((response) => {
 		response.json()
 		.then((data) => {
-			if (data.loginstate === true) {
+			if (data.success === true) {
 				modal.style.display = "block";
-				document.getElementById('modal-info-panel').innerHTML = data.msg;
+				document.getElementById('modal-info-panel').innerHTML = data.message;
 			} else {
 				questionThread(id);
 				modal.style.display = "block";
-				document.getElementById('modal-info-panel').innerHTML = data.msg;
+				document.getElementById('modal-info-panel').innerHTML = data.message;
 			}
 		})
 		.catch((err) => console.log(err));
@@ -219,7 +219,7 @@ const getAllQuestions = () => {
     response.json()
     .then((data) => {
       let questionList = '';
-      data.qstack.reverse().map((question) => {
+      data.questions.reverse().map((question) => {
       	questionList += makeQuestion(question);
       })
       mainContent.innerHTML = questionList;
@@ -256,7 +256,7 @@ const deleteQuestionHandler = (id) => {
 		.then((data) => {
 			getAllQuestions();
 			modal.style.display = "block";
-			return document.getElementById('modal-info-panel').innerHTML = data.msg;
+			return document.getElementById('modal-info-panel').innerHTML = data.message;
 		})
 		.catch((err) => console.log(err));
 	});
@@ -280,7 +280,7 @@ const postQuestionHandler = (qentry) => {
 		.then((data) => {
 			modal.style.display = "block";
 			getAllQuestions();
-			return document.getElementById('modal-info-panel').innerHTML = data.msg;
+			return document.getElementById('modal-info-panel').innerHTML = data.message;
 		})
 		.catch(err => console.log(err));
 	});

@@ -36,11 +36,11 @@ myAskedQBtn.addEventListener('click', (e) => {
     .then((data) => {
       if (data.getstate === true) {
         let questionList = '';
-        data.qstack.reverse().map((question) => {
+        data.questions.reverse().map((question) => {
           questionList += makeMyQuestion(question);
         })
         modal.style.display = "block";
-        document.getElementById('modal-info-panel').innerHTML = data.msg;
+        document.getElementById('modal-info-panel').innerHTML = data.message;
         mainContent.innerHTML = questionList;
         createLinkHandlers();
         deleteQuestionHook();
@@ -74,12 +74,12 @@ myAnsweredQBtn.addEventListener('click', (e) => {
       } else {
         let qResTo = [];
         ansd = [];
-        data.astack.map((ans) => {
+        data.answers.map((ans) => {
           ansd.push(ans.questionid);
         })
         ansd = removeArrayDuplictes(ansd);
         ansd.map((id) => {
-          data.qstack.map((question) => {
+          data.questions.map((question) => {
             if (question.questionid === id) {
               qResTo.push(question);
             }
@@ -90,7 +90,7 @@ myAnsweredQBtn.addEventListener('click', (e) => {
           questionList += makeQuestion(question);
         });
         modal.style.display = "block";
-        document.getElementById('modal-info-panel').innerHTML = data.msg;
+        document.getElementById('modal-info-panel').innerHTML = data.message;
         mainContent.innerHTML = questionList;
         createLinkHandlers();
         deleteQuestionHook();
@@ -117,7 +117,6 @@ searcher.addEventListener('keyup', (e) => {
       modal.style.display = "block";
       return document.getElementById('modal-info-panel').innerHTML = 'To search, you must enter a value';
     }
-
     modal.style.display = "block";
     document.getElementById('modal-info-panel').innerHTML = 'Searching for....' + e.target.value;
     fetch('https://nvc-stackqa.herokuapp.com/api/v1/questions', {
@@ -129,31 +128,31 @@ searcher.addEventListener('keyup', (e) => {
     })
     .then((response) => {
       response.json()
-      .then((data) => {
-        let found = data.qstack.reverse();        
-        let questionList = '';
-        let foundArray = [];
-        found.map((qobj) => {
-          if(
-            qobj.question
-            .toLowerCase()
-            .indexOf(e.target.value.toLowerCase()) !== -1
+        .then((data) => {
+          let found = data.questions.reverse();
+          let questionList = '';
+          let foundArray = [];
+          found.map((qobj) => {
+            if (
+              qobj.question
+                .toLowerCase()
+                .indexOf(e.target.value.toLowerCase()) !== -1
             ) {
-            foundArray.push(qobj);
-          }
-        })
-        if (foundArray.length > 0) {
-          document.getElementById('modal-info-panel').innerHTML = 'Found ' + foundArray.length + ' question(s) with the key word: ' + e.target.value;
-          foundArray.map((question) => {
-             questionList += makeQuestion(question);
+              foundArray.push(qobj);
+            }
           })
-          mainContent.innerHTML = questionList;
-          createLinkHandlers();
-          deleteQuestionHook();
-        } else {
-          document.getElementById('modal-info-panel').innerHTML = 'Couldnt find ...' + e.target.value;
-        }      
-      });
+          if (foundArray.length > 0) {
+            document.getElementById('modal-info-panel').innerHTML = 'Found ' + foundArray.length + ' question(s) with the key word: ' + e.target.value;
+            foundArray.map((question) => {
+              questionList += makeQuestion(question);
+            })
+            mainContent.innerHTML = questionList;
+            createLinkHandlers();
+            deleteQuestionHook();
+          } else {
+            document.getElementById('modal-info-panel').innerHTML = 'Couldnt find ...' + e.target.value;
+          }
+        });
     })
     .catch((err) => console.log(err))
   }

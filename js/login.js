@@ -25,13 +25,13 @@ loginBtn.addEventListener('click', (e) => {
 	.then((response) => {
 		response.json()
 		.then((data) => {
-			if (data.loginstate === true) {
+			if (data.success === true) {
 				localStorage.setItem('jwtoken', data.token);
 				window.location.assign('./user.html');
 			} else {
 				loader.style.display = 'none'
 				modal.style.display = "block";
-				document.getElementById('modal-info-panel').innerHTML = data.msg;
+				document.getElementById('modal-info-panel').innerHTML = data.message;
 			}
 		})
 		.catch(err => console.log(err));
