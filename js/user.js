@@ -1,3 +1,6 @@
+if (localStorage.getItem('jwtoken') === null) {
+	window.location.assign('./index.html');
+}
 const allQ = document.getElementById('all-questions');
 const addQ = document.getElementById('addquestion');
 const recentQ = document.getElementById('recent-questions');

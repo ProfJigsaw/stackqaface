@@ -1,3 +1,6 @@
+if (localStorage.getItem('jwtoken') === null) {
+  window.location.assign('./index.html');
+}
 fetch('https://nvc-stackqa.herokuapp.com/api/v1/auth/users', {
   method: 'get',
   headers: {
@@ -68,6 +71,7 @@ myAnsweredQBtn.addEventListener('click', (e) => {
   .then((response) => {
     response.json()
     .then((data) => {
+      console.log(data);
       if (data.success === false) {
         modal.style.display = "block";
         document.getElementById('modal-info-panel').innerHTML = 'No contributions made yet!';
