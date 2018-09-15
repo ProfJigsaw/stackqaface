@@ -190,12 +190,83 @@ const questionThread = (id) => {
 
           `;
         }
+        createArrowLinks();
         createPostAnswerLink();
         acceptAnswerLink();
       }
     });
   })
   .catch((err) => console.log(err))
+}
+
+/* Helper to create hooks on the voting arrows */
+const createArrowLinks = () => {
+  arrowUpBtn = document.querySelectorAll('.arrow-up');
+  arrowDownBtn = document.querySelectorAll('.arrow-down');
+
+  /* Adding the upvote event handler */
+  arrowUpBtn.forEach(node => {
+    node.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      let qid = e.target.getAttribute('qId');
+      let aid = e.target.getAttribute('ansId');
+
+      /* Passing the question id and answer id of a particular question to upvote handler */
+      upVoteHandler(qid, aid);
+    })
+  }) 
+
+  /* Adding the downvote event handler */
+  arrowDownBtn.forEach(node => {
+    node.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      let qid = e.target.getAttribute('qId');
+      let aid = e.target.getAttribute('ansId');
+
+      /* Passing the question id and answer id of a particular question to the downvote handler */
+      downVoteHandler(qid, aid);
+    })
+  })
+}
+
+/* declaration of the upvote handler */
+const upVoteHandler = (qid, aid) => {
+  fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/${aid}/upvote`, {
+    method: 'put',
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  })
+  .then((response) => {
+    response.json()
+    .then((data) => {
+      questionThread(qid);
+      return  serve_info_helper(data.message);
+    })
+    .catch((err) => console.log(err));
+  });
+}
+
+/* declaration of the downvote handler */
+const downVoteHandler = (qid, aid) => {
+  fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/${aid}/downvote`, {
+    method: 'put',
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  })
+  .then((response) => {
+    response.json()
+    .then((data) => {
+      questionThread(qid);
+      return  serve_info_helper(data.message);
+    })
+    .catch((err) => console.log(err));
+  });
 }
 
 // Helper function to add event to accept-answer button
@@ -213,7 +284,7 @@ const acceptAnswerLink = () => {
 
 // Heler to accept a particular answer
 const acceptAnswerHandler = (qid, aid) => {
-    fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/answers/${aid}`, {
+  fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/answers/${aid}`, {
     method: 'put',
     headers : { 
       'Content-Type': 'application/json',
@@ -241,9 +312,9 @@ const handleAnswers = (arr) => {
         
           <div class="side-bar ${ans.state === true ? 'accepted' : ''}">
             
-            <div class="arrow-up" href="#"></div>
+            <div class="arrow-up" href="#" qId="${ans.questionid}" ansId="${ans.answerid}"></div>
             <div id="score">${ans.upvotes - ans.downvotes}</div>
-            <div class="arrow-down" href="#"></div>
+            <div class="arrow-down" href="#" qId="${ans.questionid}" ansId="${ans.answerid}"></div>
 
           </div>
 

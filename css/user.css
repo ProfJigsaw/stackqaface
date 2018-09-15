@@ -382,6 +382,11 @@ header a:hover {
   border-bottom: 20px solid #f4f4f4;
 }
 
+.side-bar .arrow-up:hover {
+	cursor: pointer;
+  border-bottom: 20px solid #0f0;
+}
+
 .side-bar #score {
 	margin: 0px auto;
 	height: 20px;
@@ -397,6 +402,11 @@ header a:hover {
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
   border-top: 20px solid #f4f4f4;
+}
+
+.side-bar .arrow-down:hover {
+	cursor: pointer;
+  border-top: 20px solid #f00;
 }
 
 .accept-bar {
