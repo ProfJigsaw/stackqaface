@@ -1,58 +1,93 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
-        <link rel="shortcut icon" href="./assets/icon.ico">
-        <title>StackOverflow-Lite</title>
-        <link rel="stylesheet" href="./css/style.css">
-        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0">
-    </head>
-    <body>
-        <div id="container">
-            <div id="title-bar">
-                <div class="logo-name">
-                    <img src="./assets/icon.ico" alt="" id="logo">
-                    <a class="siteName" href="./user.html">StackOverflow-Lite</a>
-                </div>
-                <div class="search-box">
-                    <input id="search-input" type="text" name="keyword" placeholder="Find Question..." />
-                </div>
-                <div id="profile">
-                    <a href="./userprofile.html">View Profile</a>
-                    <a id="logout-link" href="./index.html">Logout</a>
-                </div>
-            </div>
-            <div id="main-content-area">
-                <div id="feature-panel">
-                    <fieldset>
-                        <legend> FEATURES</legend>
-                        <div id="features">
-                            <p>
-                            <a id="home" href="./user.html">Home</a>
-                            <p>
-                            <a id="all-questions" href="#">View all questions asked</a>
-                            <p>
-                            <a id="recent-questions" href="#">Recently asked questions</a>
-                            <p>
-                            <a id="addquestion" href="#"> Add a Question</a>
-                        </div>
-                    </fieldset>
-                </div>
-                <div id="main-content-container">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<meta name="description" content="a lite question and answer platform">
+		<meta name="keywords" content="questions, answers, problems, solutions, how to">
+		<meta name="author" content="Nweze Victor">
+		<title>📚 StackOverflow Lite | User</title>
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="./css/user.css">
+	</head>
+	<body>
+		<header>
+			<div class="container">
+				<div id="branding">
+					<h1><img id="logo" src="./assets/logo.png"><span class="highlight">Stack</span>Overflow Lite</h1>
+				</div>
+				<a id="searcher" href="#search"><span id="stack-searcher" class="fa fa-2x fa-search"></span></a>
+				<nav>
+					<ul>
+						<li class="current"><a href="#" id="profile-link">Profile</a></li>
+						<li><a id="logout-link" href="#">Logout</a></li>
+					</ul>
+				</nav>
+			</div>
+		</header>
 
-                </div>
-                <div id="info" class="server-info" style="display: none;">
-                    <div class="modal-area">
-                      <span class="cancel">&times;</span>
-                      <div id="modal-info-panel"></div>
-                    </div>
-                  </div>
-            </div>
-        </div>
-        <div id="footer">
-             &copy; Copyright 2018. <a href="https://nweze-stackoverflow.herokuapp.com/">stackoverflow-Lite</a>
-        </div>
-        <script src="./js/helpers.js"></script>
-        <script src="./js/user.js"></script>
-    </body>
+		<div class="container-wrapper">
+			<div id="main-wrapper">
+
+
+				<div class="sidebar">
+					<nav role="navigation" id="navigation">
+						<ul>
+							<li id="homeLink">Home</li>
+							<li id="all-questions">All Questions</li>
+							<li>Recent Questions</li>
+							<li id="post-question-link">Post Question</li>
+						</ul>
+					</nav>
+				</div>
+
+				<!-- Beginning of main content area -->
+				<div id="main-content-container">
+					<div id="questions-area">
+
+					</div>
+				</div>
+				<!-- End of main content area -->
+
+			</div>
+		</div>
+
+		<footer id="footer">
+			<p>StackOverflow Lite, Copyright &copy; 2018</p>
+		</footer>
+
+		<!-- Server information modal -->
+  	<div id="info" class="server-info" style="display: none;">
+      <div class="modal-area">
+        <span class="cancel">&times;</span>
+        <div id="modal-info-panel"></div>
+      </div>
+    </div>
+    <!-- End of server information modal -->
+
+		<!-- Modal -->
+		<div class="modal-overlay closed" id="modal-overlay"></div>
+		<div class="modal closed" id="modal">
+		  <button class="close-button" id="close-button">&times;</button>
+		  <div class="modal-guts">
+		  	
+		  </div>
+		</div>
+		<!-- End of modal -->
+
+		<!-- Cool searcher -->
+		<!-- Search Form -->
+		<div id="search"> 
+			<span class="close">&times;</span>
+			<div role="search" id="searchform">
+				<input id="stack-searcher-input" value="" type="search" placeholder="Search..."/>
+			</div>
+		</div>
+		<!-- End of cool searcher -->
+
+		<!-- scripts -->
+		<script type="text/javascript" src="./js/userhelpers.js"></script>
+		<script type="text/javascript" src="./js/user.js"></script>
+	</body>
 </html>

@@ -1,63 +1,203 @@
 if (localStorage.getItem('jwtoken') === null) {
 	window.location.assign('./index.html');
 }
-const allQ = document.getElementById('all-questions');
-const addQ = document.getElementById('addquestion');
-const recentQ = document.getElementById('recent-questions');
-const homepage = document.getElementById('home');
-const searcher = document.getElementById('search-input');
-const logoutBtn = document.getElementById('logout-link');
-const mainContent = document.getElementById('main-content-container');
 
-fetch('https://nvc-stackqa.herokuapp.com/api/v1/auth/users', {
-  method: 'get',
-  headers: {
-  	Accept: 'application/json',
-  	Authorization: `header ${localStorage.getItem('jwtoken')}` 
-  }
+const modal         = document.querySelector("#modal");
+const modalG        = document.querySelector(".modal-guts");
+const closeButton   = document.querySelector("#close-button");
+const homeLink 			= document.querySelector("#homeLink");
+const postLink   		= document.querySelector("#post-question-link");
+const modalOverlay  = document.querySelector("#modal-overlay");
+const mainContent 	= document.querySelector('#questions-area');
+const allQ 					= document.querySelector('#all-questions');
+const logout				= document.querySelector('#logout-link');
+const profile				= document.querySelector('#profile-link');
+
+/* Profile handler */
+profile.addEventListener('click', (e) => {
+	e.preventDefault();
+	mainContent.innerHTML = `<img src="./assets/loader.gif" alt="loader" id="loader">`;
+	fetch('https://nvc-stackqa.herokuapp.com/api/v1/auth/users', {
+	  method: 'get',
+	  headers: {
+	  	Accept: 'application/json',
+	  	Authorization: `header ${localStorage.getItem('jwtoken')}` 
+	  }
+	})
+	.then((response) => {
+	  response.json()
+	  .then((data) => {
+	  	mainContent.innerHTML = `
+	  	<div class="profile-card">
+			  <img src="./assets/profilepic.jpg" alt="avatar" class="profile-avatar">
+			  <div class="card-body">
+			  	<h1>${data.username}</h1>
+				  <p>Stack Id: ${data.userid}</p><br>
+				  <p><a href="#" id="my-questions">My Questions</a></p>
+				  <p><a href="#" id="my-contributions">My Contributions</a></p>
+				 	<p><a href="#" id="top-question">Top Question</a></p>
+			  </div>
+			  <p><button>Stack Profile</button></p>
+			</div>
+		`;
+		createProfileLinkHandlers();
+	  });
+	})
+	.catch((err) => console.log(err))
 })
-.then((response) => {
-  response.json()
-  .then((data) => {
-  	mainContent.innerHTML = `
-	    <h1>Hello, <span id="hello">${data.username}</span>!</h1>
-	    <h2 id="main-header"> Welcome to, StackOverFlow Lite</h2>
-	    <br />
-	    <h3>STACK TIP</h3>
-	    <i>
-	      This is a platform for asking useful questions on any aspect 
-	      of life and getting feedback from others on the platform.
-	      <p>To the left of the screen are options for navigating your 
-	      page, at the top right hand corner of the page are buttons to 
-	      view your profile and account information and to logout. </p>
-	    </i>
-	`;
-  });
+
+/* logout handler */
+logout.addEventListener('click', (e) => {
+	e.preventDefault();
+	localStorage.removeItem('jwtoken')
+	window.location.assign('./index.html');
 })
-.catch((err) => console.log(err))
+
+const welcomeMessage = () => {
+	mainContent.innerHTML = `<img src="./assets/loader.gif" alt="loader" id="loader">`;
+	fetch('https://nvc-stackqa.herokuapp.com/api/v1/auth/users', {
+	  method: 'get',
+	  headers: {
+	  	Accept: 'application/json',
+	  	Authorization: `header ${localStorage.getItem('jwtoken')}` 
+	  }
+	})
+	.then((response) => {
+	  response.json()
+	  .then((data) => {
+	  	mainContent.innerHTML = `
+	  		<h1>Welcome, <span class="highlight">${data.username}</span>! to stackOverflow Lite.</h1>
+				<p>Your No_1 Q & A platform.</p><br>
+				<p>Below is a sample of the format in which questions are displayed on this platform. </p><br>
+				
+				<!-- Demo question one -->
+				<div class="question-container">
+					<div class="question-card">
+						<div class="side-bar"></div>
+						<div class="main-question-bar">
+							Who is the inventor of the light bulb?
+						</div>
+						<button class="delete-question">Delete</button>
+					</div>
+				</div>
+
+				<!-- Demo question two -->
+				<div class="question-container">
+					<div class="question-card">
+						<div class="side-bar"></div>
+						<div class="main-question-bar">
+							Who is Linus Torvalds?
+						</div>
+						<button class="delete-question">Delete</button>
+					</div>
+				</div>
+				<!-- End of demo question -->
+
+				<div id="demo-msg">
+						<p>Click on a particular question to view its thread. Add answers and comment on posted answers if the need arises. </p><br>
+					<p>To view all questions posted on this platform or to add your own question, use the side bar on the left of the screen. (or at the top of your mobile.) </p>
+				</div>
+		`;
+	  });
+	})
+	.catch((err) => console.log(err))
+}
+
+/* Initial call to welcomeMessage on page load */
+welcomeMessage();
+
+/* Call to welcomeMessage on homeLink click */
+homeLink.addEventListener('click', (e)=> {
+	e.preventDefault();
+	welcomeMessage();
+})
 
 // Get all questions handler
 allQ.addEventListener('click', (e) => {
 	e.preventDefault();
+	mainContent.innerHTML = `<img src="./assets/loader.gif" alt="loader" id="loader">`;
 	getAllQuestions();
 })
 
-// Get recent questions handler
-recentQ.addEventListener('click', (e) => {
+/* Post question pop up handler */
+postLink.addEventListener('click', (e) => {
 	e.preventDefault();
-	getAllQuestions();
+	modal.classList.toggle("closed");
+  modalOverlay.classList.toggle("closed");
+  modalG.innerHTML = `
+  <div class="post-answer-box">
+  	<h1>Post A Question</h1>
+  	<form>
+  		<p>Title</p>
+  		<input id="form-question-title" type="text" name="username" placeholder="Question Title...">
+  		<p>Question body</p>
+  		<textarea id="form-question-input" name="question" placeholder="Question body..."></textarea>
+  		<input id="post-submit-button" type="submit" name="submit" value="Post">
+  	</form>
+  </div>
+  `;
+
+  const addQBtn = document.querySelector('#post-submit-button');
+
+	// post question handler
+	addQBtn.addEventListener('click', (e) => {
+		e.preventDefault();
+		let question = document.querySelector('#form-question-input').value
+		let qtitle = document.querySelector('#form-question-title').value
+
+		if(!question || !qtitle) {
+			server_modal.style.display = "block";
+			return document.getElementById('modal-info-panel').innerHTML = 'Empty question cannot be submitted';
+		} else if (!question.trim()) {
+			server_modal.style.display = "block";
+			return document.getElementById('modal-info-panel').innerHTML = 'Empty question cannot be submitted';
+		}
+		modal.classList.toggle("closed");
+	  modalOverlay.classList.toggle("closed");
+		postQuestionHandler(question, qtitle);
+
+	})
+});
+
+/* cool searcher functionality */
+const searcher 				= document.querySelector('#searcher');
+const closemodal 			= document.querySelector('.close');
+const searchmodal 		= document.querySelector('#search');
+const searcherInput 	= document.querySelector('#stack-searcher-input');
+
+searcher.addEventListener('click', (e) => {
+	e.preventDefault();
+	searchmodal.classList.add('open');
+	searcherInput.focus();
 })
+
+searchmodal.addEventListener('click', (e) => {
+	e.preventDefault();
+	if(e.target === searchmodal || e.target === closemodal) {
+		searchmodal.classList.remove('open');
+	}
+});
+
+searchmodal.addEventListener('keyup', (e) => {
+	e.preventDefault();
+	if (e.keyCode == 27 ){
+		searchmodal.classList.remove('open');
+	}
+});
 
 //Search handler
-searcher.addEventListener('keyup', (e) => {
+searcherInput.addEventListener('keyup', (e) => {
 	e.preventDefault();
 	if (e.keyCode === 13) {
 		if (!e.target.value || !e.target.value.trim()) {
-			modal.style.display = "block";
+			server_modal.style.display = "block";
 			return document.getElementById('modal-info-panel').innerHTML = 'To search, you must enter a value';
 		}
-		modal.style.display = "block";
-		document.getElementById('modal-info-panel').innerHTML = 'Searching for....' + e.target.value;
+		server_modal.style.display = "block";
+		document.getElementById('modal-info-panel').innerHTML = `
+			Searching for...  ${e.target.value}
+			<img src="./assets/loader.gif" alt="profileloader" id="profileloader">
+		`;
 		fetch('https://nvc-stackqa.herokuapp.com/api/v1/questions', {
 		  method: 'get',
 		  headers: {
@@ -74,6 +214,10 @@ searcher.addEventListener('keyup', (e) => {
 	      found.map((qobj) => {
 	      	if(
 	      		qobj.question
+	      		.toLowerCase()
+	      		.indexOf(e.target.value.toLowerCase()) !== -1 
+	      		||
+	      		qobj.title
 	      		.toLowerCase()
 	      		.indexOf(e.target.value.toLowerCase()) !== -1
 	      		) {
@@ -94,54 +238,31 @@ searcher.addEventListener('keyup', (e) => {
 	    });
 		})
 		.catch((err) => console.log(err))
-	}
-})
 
-// add question dialog handler
-addQ.addEventListener('click', (e) => {
-	e.preventDefault();
-	mainContent.innerHTML = `
-		<div id="add-question">
-		    <h3 id="askhead">Ask Your Question:</h3>
-		    <form action="#" method="post">
-		            <br>
-		            <textarea type="text" name="question" id="form-question-input"required></textarea>
-		        </label>
-		        <br>
-		        <input type="submit" value="Add question" name="submit" class="submit" id="addquestion-button" />
-		    </form>
-		</div>
-	`;
-	const addQBtn = document.getElementById('addquestion-button');
-	// post question handler
-	addQBtn.addEventListener('click', (e) => {
-		e.preventDefault();
-		let question = document.getElementById('form-question-input').value
-		if(!question){
-			modal.style.display = "block";
-			return document.getElementById('modal-info-panel').innerHTML = 'Empty question cannot be submitted';
-		} else if (!question.trim()) {
-			modal.style.display = "block";
-			return document.getElementById('modal-info-panel').innerHTML = 'Empty question cannot be submitted';
-		}
-		postQuestionHandler(document.getElementById('form-question-input').value);
-		})
-	})
-logoutBtn.addEventListener('click', (e) => {
-	e.preventDefault();
-	localStorage.removeItem('jwtoken')
-	window.location.assign('./index.html');
+	}
+
+})
+/* end of cool searcher functionality */
+
+
+/* close modal handler */
+closeButton.addEventListener('click', (e) => {
+  e.preventDefault();
+  modal.classList.toggle("closed");
+  modalOverlay.classList.toggle("closed");
+  modalG.innerHTML = "";
 });
 
-const modal = document.getElementById('info');
-const span = document.getElementsByClassName("cancel")[0];
+/* server modal handler */
+const server_modal = document.getElementById('info');
+const server_span_close = document.getElementsByClassName("cancel")[0];
 
-span.onclick = function() {
-    modal.style.display = "none";
+server_span_close.onclick = function() {
+    server_modal.style.display = "none";
 }
 
 window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
+    if (event.target == server_modal) {
+        server_modal.style.display = "none";
     }
 }
