@@ -10,6 +10,7 @@ const postLink   		= document.querySelector("#post-question-link");
 const modalOverlay  = document.querySelector("#modal-overlay");
 const mainContent 	= document.querySelector('#questions-area');
 const allQ 					= document.querySelector('#all-questions');
+const recentQ				= document.querySelector('#recent-questions')
 const logout				= document.querySelector('#logout-link');
 const profile				= document.querySelector('#profile-link');
 
@@ -114,6 +115,13 @@ homeLink.addEventListener('click', (e)=> {
 
 // Get all questions handler
 allQ.addEventListener('click', (e) => {
+	e.preventDefault();
+	mainContent.innerHTML = `<img src="./assets/loader.gif" alt="loader" id="loader">`;
+	getAllQuestions();
+})
+
+// Get recent questions handler
+recentQ.addEventListener('click', (e) => {
 	e.preventDefault();
 	mainContent.innerHTML = `<img src="./assets/loader.gif" alt="loader" id="loader">`;
 	getAllQuestions();

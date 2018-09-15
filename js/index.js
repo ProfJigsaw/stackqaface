@@ -1,3 +1,7 @@
+if (localStorage.getItem('jwtoken') !== null) {
+  window.location.assign('./user.html');
+}
+
 const modal               = document.querySelector("#modal");
 const modalG              = document.querySelector(".modal-guts");
 const closeButton         = document.querySelector("#close-button");
@@ -113,6 +117,9 @@ signupPopUpButton.addEventListener('click', (e) => {
     }
     if (!testEmail(email)) {
       return serve_info_helper('Your Email is invalid!');
+    }
+    if (password.length < 6) {
+      return serve_info_helper('Your password is too short! It should be atleast 6 characters long');
     }
     loader.style.display = 'block';
 

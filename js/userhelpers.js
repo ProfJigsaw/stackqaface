@@ -1,3 +1,9 @@
+/* Helper to serve up information */
+const serve_info_helper = (msg) => {
+  server_modal.style.display = "block";
+  return document.getElementById('modal-info-panel').innerHTML = msg;
+}
+
 // Helper to make questions
 const makeQuestion = (qobj) => {
   return `
@@ -46,9 +52,8 @@ const postQuestionHandler = (qentry, qtitle) => {
   .then((response) => {
     response.json()
     .then((data) => {
-      server_modal.style.display = "block";
       getAllQuestions();
-      return document.querySelector('#modal-info-panel').innerHTML = data.message;
+      return serve_info_helper(data.message);
     })
     .catch(err => console.log(err));
   });
@@ -103,8 +108,7 @@ const deleteQuestionHandler = (id) => {
     response.json()
     .then((data) => {
       getAllQuestions();
-      server_modal.style.display = "block";
-      return document.querySelector('#modal-info-panel').innerHTML = data.message;
+      return  serve_info_helper(data.message);
     })
     .catch((err) => console.log(err));
   });
@@ -221,8 +225,7 @@ const acceptAnswerHandler = (qid, aid) => {
     response.json()
     .then((data) => {
       questionThread(qid);
-      server_modal.style.display = "block";
-      return document.querySelector('#modal-info-panel').innerHTML = data.message;
+      return  serve_info_helper(data.message);
     })
     .catch((err) => console.log(err));
   });
@@ -265,12 +268,10 @@ const createPostAnswerLink = () => {
   postAnswerBtn.addEventListener('click', (e) => {
     e.preventDefault();
     if (!document.querySelector('#form-answer-input').value) {
-      server_modal.style.display = "block";
-      return document.querySelector('#modal-info-panel').innerHTML = 'You must enter an answer to submit!';
+      return  serve_info_helper('You must enter an answer to submit!');
     }
     if (!document.querySelector('#form-answer-input').value.trim()) {
-      server_modal.style.display = "block";
-      return document.querySelector('#modal-info-panel').innerHTML = 'Your Entry is still empty!';
+      return  serve_info_helper('Your Entry is still empty!');
     }
     let id = document.querySelector('.main-question-bar').getAttribute('questionid');
     postAnswerHelper(id);
@@ -295,12 +296,10 @@ const postAnswerHelper = (id) => {
     .then((data) => {
       if (data.success === true) {
         questionThread(id);
-        server_modal.style.display = "block";
-        document.querySelector('#modal-info-panel').innerHTML = data.message;
+        return serve_info_helper(data.message);
       } else {
         questionThread(id);
-        server_modal.style.display = "block";
-        document.querySelector('#modal-info-panel').innerHTML = data.message;
+        return serve_info_helper(data.message);
       }
     })
     .catch((err) => console.log(err));
@@ -353,8 +352,7 @@ const createProfileLinkHandlers = () => {
           data.questions.reverse().map((question) => {
             questionList += makeMyQuestion(question);
           })
-          server_modal.style.display = "block";
-          document.querySelector('#modal-info-panel').innerHTML = data.message;
+          serve_info_helper(data.message);
           mainContent.innerHTML = questionList;
           createLinkHandlers();
           deleteQuestionHook();
@@ -409,8 +407,7 @@ const createProfileLinkHandlers = () => {
             qResTo.reverse().map((question) => {
               questionList += makeQuestion(question);
             });
-            server_modal.style.display = "block";
-            document.getElementById('modal-info-panel').innerHTML = data.message;
+            serve_info_helper(data.message);
             mainContent.innerHTML = questionList;
             createLinkHandlers();
             deleteQuestionHook();
