@@ -233,7 +233,7 @@ searcherInput.addEventListener('keyup', (e) => {
 	      	}
 	      })
 	      if (foundArray.length > 0) {
-					document.getElementById('modal-info-panel').innerHTML = 'Found ' + foundArray.length + ' question(s) with the key word: ' + e.target.value;
+					document.getElementById('modal-info-panel').innerHTML = `Found ${foundArray.length} ${foundArray.length === 1 ? 'question' : 'questions'} with the key word: ${e.target.value}`;
 					foundArray.map((question) => {
 		      	 questionList += makeQuestion(question);
 		      })
