@@ -15,6 +15,46 @@ html, body {
   padding: 0;
 }
 
+
+
+/* Beginning of cool modal css handler */
+#com-mod-con { position: fixed; height: 100%; width: 100%; top: 0; left: 0; transform: scale(0); z-index: 999; }
+#com-mod-con.one { transform: scaleY(0) scaleX(0); animation: unfoldIn 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+#com-mod-con.one .com-mod-bg .com-mod { transform: scale(0); animation: zoomIn 0.5s 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+#com-mod-con.one.out { transform: scale(1); animation: unfoldOut 1s 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+#com-mod-con.one.out .com-mod-bg .com-mod { animation: zoomOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards; }
+#com-mod-con .com-mod-bg { background: rgba(0, 0, 0, .8); text-align: center; top: 0; left: 0; height: 100%; width: 100%; }
+#com-mod-con .com-mod-bg .com-mod { background: white; padding: 20px; display: inline-block; border-radius: 6px; font-weight: 300; position: relative; top: 5%; overflow-y: scroll; width: 70%; height: 80%; }
+@keyframes unfoldIn { 0% { transform: scaleY(0.005) scaleX(0); } 50% { transform: scaleY(0.005) scaleX(1); } 100% { transform: scaleY(1) scaleX(1); } }
+@keyframes unfoldOut { 0% { transform: scaleY(1) scaleX(1); } 50% { transform: scaleY(0.005) scaleX(1); } 100% { transform: scaleY(0.005) scaleX(0); } }
+@keyframes zoomIn { 0% { transform: scale(0); } 100% { transform: scale(1); } }
+@keyframes zoomOut { 0% { transform: scale(1); } 100% { transform: scale(0); } }
+/* End of cool modal css handler */
+
+/* Commenting section */
+/* Layout structure for the commenting section */ 
+#comments-body { display: block; margin: 0 auto; padding-top: 0; padding-right: 45px; }
+#comment-container { display: block; width: 100%; background: #fff; text-align: left; }
+/* End of layout structure for the commenting section */
+
+/* comments area */
+#comments { display: block; }
+#comments .cmmnt, ul .cmmnt, ul ul .cmmnt { display: block; position: relative; padding-left: 65px; border-top: 1px solid #ddd; }
+#comments .cmmnt .avatar { position: absolute; top: 8px; left: 0; }
+#comments .cmmnt .avatar img { border-radius: 3px; -webkit-box-shadow: 1px 1px 2px rgba(0,0,0,0.44); -moz-box-shadow: 1px 1px 2px rgba(0,0,0,0.44); box-shadow: 1px 1px 2px rgba(0,0,0,0.44); }
+#comments .cmmnt .avatar a:hover img { opacity: 0.77; }
+#comments .cmmnt .cmmnt-content { padding: 0px 3px; padding-bottom: 12px; padding-top: 8px; }
+#comments .cmmnt .cmmnt-content header { font-size: 1.3em; display: block; margin-bottom: 8px; }
+#comments .cmmnt .cmmnt-content header .pubtype { color: #777; }
+#comments .cmmnt .cmmnt-content header .userlink { font-weight: bold; } 
+#comments .cmmnt .replies { margin-bottom: 7px; }
+/* End of comments area */
+/* End of the commenting section */
+
+
+
+
+
 /* cool searcher style */
 a#searcher {
 	float: right;
@@ -133,7 +173,7 @@ ul {
 }
 
 /* Header */
-header {
+#main-header{
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -147,38 +187,38 @@ header {
 	z-index: 49;
 }
 
-header a {
+#main-header a {
 	color: #ffffff;
 	text-decoration: none;
 	text-transform: uppercase;
 	font-size: 16px;
 }
 
-header li {
+#main-header li {
 	float: left;
 	display: inline;
 	padding: 0 20px 0 20px;
 }
 
-header #branding {
+#main-header #branding {
 	float: left;
 }
 
-header #branding h1 {
+#main-header #branding h1 {
 	margin: 0;
 }
 
-header nav {
+#main-header nav {
 	float: right;
 	margin-top: 15px;
 }
 
-header .highlight, header .current a {
+#main-header .highlight, header #main-header .current a {
 	color: #e8491d;
 	font-weight: bold;
 }
 
-header a:hover {
+#main-header a:hover {
 	color: #cccccc;
 	font-weight: bold;
 }
@@ -261,6 +301,7 @@ header a:hover {
 
 .question-container {
 	width: 100%;
+	min-height: 100px;
 	background: transparent;
 }
 
@@ -359,6 +400,7 @@ header a:hover {
 
 .answers .accepted {
 	background: #006400 !important;
+	color: #fff;
 }
 
 .main-answer-bar {
@@ -411,15 +453,21 @@ header a:hover {
 	float: right;
 }
 
-button.accept-answer {
+button.accept-answer, button.view-comments {
 	padding: 2px;
   border: 1px solid #888;
   border-radius: 4px;
 	text-align: center;
-	height: 25px;
-	width: 90%;
-	margin: 35px auto;
+	height: 50%;
+	width: 70%;
+	margin: 12px auto;
 	font-weight: bold;
+}
+
+button.accept-answer:hover, button.view-comments:hover {
+	cursor: pointer;
+	background: #000064;
+	color: #fff;
 }
 
 .question-card {
@@ -429,7 +477,7 @@ button.accept-answer {
 	text-align: center;
 	background: #ffffff;
   border-radius: 2px;
-  min-height: 80px;
+  min-height: 100px;
   margin: 0.2rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
@@ -452,7 +500,7 @@ button.accept-answer {
 	width: 75%;
 	height: 100%;
 	text-align: left;
-	padding: 25px 10px;
+	padding: 15px 10px;
 	font-family: 'Prompt', sans-serif;
 	font-size: 20px;
 	cursor: pointer;
@@ -716,6 +764,16 @@ footer {
 	font-size: 16px;
 }
 
+#form-comment-input {
+	width: 100%;
+	height: 40px;
+	border: none;
+	background: #e4e4e4;
+	border-bottom: 1px solid #000;
+	outline: none;
+	font-size: 16px;
+}
+
 .post-answer-box #post-submit-button {
 	border: none;
 	outline: none;
@@ -727,26 +785,38 @@ footer {
 	border-radius: 3px;
 }
 
-.post-answer-box #post-submit-button:hover {
+#comment-submit-button {
+	border: none;
+	outline: none;
+	height: 40px;
+	width: 100%;
+	background: #e8491d;
+	color: #000;
+	font-size: 18px;
+	font-weight: bold;
+	border-radius: 3px;
+}
+
+.post-answer-box #post-submit-button:hover, #comment-submit-button:hover {
 	cursor: pointer;
 	background: #ffc107;
 	color: #000;
 }
 
 @media(max-width: 768px){
-	header #branding,
-	header nav,
-	header nav li {
+	#main-header #branding,
+	#main-header nav,
+	#main-header nav li {
 		float: none;
 		text-align: center;
 		width: 100%;
 	}
 
-	header h1 {
+	#main-header h1 {
 		font-size: 22px;
 	}
 
-	header {
+	#main-header {
 		padding-bottom: 20px;
 	}
 

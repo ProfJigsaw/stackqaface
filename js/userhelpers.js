@@ -190,6 +190,7 @@ const questionThread = (id) => {
 
           `;
         }
+        createCommentLinks();
         createArrowLinks();
         createPostAnswerLink();
         acceptAnswerLink();
@@ -199,10 +200,130 @@ const questionThread = (id) => {
   .catch((err) => console.log(err))
 }
 
+/* Helper to create hooks on the comment button */
+const createCommentLinks = () => {
+  let commentingBtn = document.querySelectorAll('.view-comments');
+
+  commentingBtn.forEach((node) => {
+    node.addEventListener('click', (e) => {
+      e.preventDefault();
+      let com_mod_container   = document.querySelector('#com-mod-con');
+      let com_mod_background  = document.querySelector('.com-mod-bg');
+
+      if (com_mod_container.classList.contains('out')) {
+        com_mod_container.classList.remove('out');
+      }
+      if (com_mod_container.classList.contains('one')) {
+        com_mod_container.classList.remove('one');
+      }
+      com_mod_container.classList.toggle('one');
+      
+      let username = e.target.getAttribute('username');
+      let answer = e.target.getAttribute('answer').split('*#*#').join(' ');
+      let qid = e.target.getAttribute('questionid');
+      let aid = e.target.getAttribute('answerid');
+
+      const commentTarget = document.querySelector('#comment-main-target');
+      commentTarget.innerHTML = `
+        <div class="avatar"><a href="#"><img src="assets/default.png" width="55" height="55" alt="default avatar"></a></div>
+        <div class="cmmnt-content">
+          <header><a href="#" class="userlink" questionid="${qid}" answerid="${aid}">${username}</a> - <span class="pubtype">answered</span></header>
+          <p>${answer}</p>
+        </div>
+        <ul class="replies" id="main-reply-container"></ul>
+      `;
+      fetchReplies(qid, aid)
+      
+    })
+  })
+  
+}
+
+/* Handler for comments_-_answer replies */
+const fetchReplies = (qid, aid) => {
+  server_modal.style.display = "block";
+  document.getElementById('modal-info-panel').innerHTML = `
+    Please wait..... Loading comments for this answer
+    <img src="./assets/loader.gif" alt="profileloader" id="profileloader">
+  `;
+  fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/answers/${aid}/comments`, {
+    method: 'get',
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  })
+  .then((response) => {
+    response.json()
+    .then((data) => {
+      if (data.comments.length == 0) {
+        return serve_info_helper('There are no comments for this answer, close this modal and add some');
+      }
+      serve_info_helper('Comments loaded')
+      let replyString = '';
+      data.comments.map((reply) => {
+        replyString += makeReplies(reply);
+      })
+      const replyTarget = document.querySelector('#main-reply-container');
+      replyTarget.innerHTML = replyString;
+    })
+    .catch((err) => console.log(err));
+  });
+}
+
+/* Helper to make replies */
+const makeReplies = (arr) => {
+  return `<li class="cmmnt">
+    <div class="avatar"><a href="#"><img src="assets/default.png" width="55" height="55" alt="default avatar"></a></div>
+    <div class="cmmnt-content">
+    <header><a href="#" class="userlink">${arr.username}</a> - <span class="pubtype">commented</span></header>
+    <p>${arr.comment}</p>
+    </div> 
+  </li>
+  `
+}
+
+/* Helper to post comments */
+const postCommentsHandler = (qid, aid, comment) => {
+  if (!comment || !comment.trim()) {
+    return serve_info_helper('You need to enter some comment to proceed');
+  }
+  server_modal.style.display = "block";
+  document.querySelector('#modal-info-panel').innerHTML = `
+    Posting your comment ... 
+    <img src="./assets/loader.gif" alt="profileloader" id="profileloader">
+  `;
+  fetch(`https://nvc-stackqa.herokuapp.com/api/v1/questions/${qid}/answers/${aid}/comments`, {
+    method: 'post',
+    headers : { 
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': `header ${localStorage.getItem('jwtoken')}`
+    },
+    body: JSON.stringify({
+      "comment": comment
+    })
+  })
+  .then((response) => {
+    response.json()
+    .then((data) => {
+      if (data.success === true) {
+        fetchReplies(qid, aid);
+        return serve_info_helper(data.message);
+      } else {
+        fetchReplies(qid, aid);
+        return serve_info_helper(data.message);
+      }
+    })
+    .catch((err) => console.log(err));
+  });
+}
+
+
 /* Helper to create hooks on the voting arrows */
 const createArrowLinks = () => {
-  arrowUpBtn = document.querySelectorAll('.arrow-up');
-  arrowDownBtn = document.querySelectorAll('.arrow-down');
+  let arrowUpBtn = document.querySelectorAll('.arrow-up');
+  let arrowDownBtn = document.querySelectorAll('.arrow-down');
 
   /* Adding the upvote event handler */
   arrowUpBtn.forEach(node => {
@@ -323,7 +444,8 @@ const handleAnswers = (arr) => {
           </div>
 
           <div class="accept-bar">
-            <button questionid="${ans.questionid}" answerid="${ans.answerid}" class="accept-answer">Accept</button>
+            <button questionid="${ans.questionid}" answerid="${ans.answerid}" class="fa fa-check fa-2x accept-answer"></button>
+            <button username=${ans.username} answer=${ans.answer.split(' ').join('*#*#')} questionid="${ans.questionid}" answerid="${ans.answerid}" class="fa fa-comments-o fa-2x view-comments"></button>
           </div>
           
         </div>
@@ -490,7 +612,48 @@ const createProfileLinkHandlers = () => {
   })
 
   platformTopQuestion.addEventListener('click', (e) => {
-    e.preventDefault()
-    console.log('loading platforms top question...')
+    e.preventDefault();
+    server_modal.style.display = "block";
+    document.getElementById('modal-info-panel').innerHTML = `
+      Loading top question on the platform ...
+      <img src="./assets/loader.gif" alt="profileloader" id="profileloader">
+    `;
+      fetch('https://nvc-stackqa.herokuapp.com/api/v1/questions/stack/topquestion', {
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `header ${localStorage.getItem('jwtoken')}`
+      }
+    })
+    .then((response) => {
+      response.json()
+      .then((data) => {
+        let allaid = data.answers.map((answer) => answer.questionid);
+        let modeId = modeFunc(allaid);
+        let topQuestionArr = data.questions.filter((question) => question.questionid === modeId);
+        if (topQuestionArr.length === 0) {
+          return serve_info_helper('There was an error retrieving the top question');
+        }
+        serve_info_helper('Top question retrieved successfully');
+        mainContent.innerHTML = makeQuestion(topQuestionArr[0]);
+        createLinkHandlers();
+        deleteQuestionHook();
+      });
+
+    })
+    .catch(err => console.log(err))
   })
 }
+
+/* Helper function to find the mode element in an array of numbers */
+const modeFunc = (arr) => {
+  return arr.reduce((current, item) => {
+    current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+    let val = current.numMapping[item];
+    if (val > current.greatestFreq) {
+      current.greatestFreq = val;
+      current.mode = item;
+    }
+    return current;
+  }, { mode: null, greatestFreq: -Infinity, numMapping: {} }).mode;
+};

@@ -13,7 +13,7 @@
 		<link rel="stylesheet" type="text/css" href="./css/user.css">
 	</head>
 	<body>
-		<header>
+		<header id="main-header">
 			<div class="container">
 				<div id="branding">
 					<h1><img id="logo" src="./assets/logo.png"><span class="highlight">Stack</span>Overflow Lite</h1>
@@ -86,6 +86,47 @@
 			</div>
 		</div>
 		<!-- End of cool searcher -->
+
+
+		<!-- Cool modal to hold comments -->
+		<div id="com-mod-con" class="">
+
+	    <div class="com-mod-bg">
+
+	      <div class="com-mod">
+
+	      	<h1> Comment Thread</h1>
+
+	      	<!-- beginning of comment thread -->
+          <div id="comments-body">
+
+            <div id="comment-container">
+              
+              <ul id="comments">
+
+              	<!-- Answer selected -->
+                <li class="cmmnt" id="comment-main-target">
+
+                </li>
+
+              </ul>
+
+            </div>
+
+          </div>
+          <!-- End of the comment thread -->
+          <br><br>
+          <form>
+	          <textarea id="form-comment-input" name="question" placeholder="Comment on this..."></textarea>
+	          <input id="comment-submit-button" type="submit" name="submit" value="Post Comment">
+	        </form>
+
+	      </div>
+
+	    </div>
+	    
+	  </div>
+	  <!-- End of cool modal to hold comments -->
 
 		<!-- scripts -->
 		<script type="text/javascript" src="./js/userhelpers.js"></script>

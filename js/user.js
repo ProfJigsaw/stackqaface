@@ -13,6 +13,18 @@ const allQ 					= document.querySelector('#all-questions');
 const recentQ				= document.querySelector('#recent-questions')
 const logout				= document.querySelector('#logout-link');
 const profile				= document.querySelector('#profile-link');
+const postComButton = document.querySelector('#comment-submit-button');
+
+/* Post comment event hook */
+postComButton.addEventListener('click', (e) => {
+	e.preventDefault();
+	let userlink = document.querySelector('.userlink');
+	let comment = document.querySelector('#form-comment-input').value;
+	let qid = userlink.getAttribute('questionid');
+	let aid = userlink.getAttribute('answerid');
+	postCommentsHandler(qid, aid, comment);
+	document.querySelector('#form-comment-input').value = '';
+})
 
 /* Profile handler */
 profile.addEventListener('click', (e) => {
@@ -192,6 +204,7 @@ searchmodal.addEventListener('keyup', (e) => {
 		searchmodal.classList.remove('open');
 	}
 });
+/* end of cool searcher functionality */
 
 //Search handler
 searcherInput.addEventListener('keyup', (e) => {
@@ -250,8 +263,6 @@ searcherInput.addEventListener('keyup', (e) => {
 	}
 
 })
-/* end of cool searcher functionality */
-
 
 /* close modal handler */
 closeButton.addEventListener('click', (e) => {
@@ -261,9 +272,13 @@ closeButton.addEventListener('click', (e) => {
   modalG.innerHTML = "";
 });
 
+let com_mod_container   = document.querySelector('#com-mod-con');
+let com_mod_background  = document.querySelector('.com-mod-bg');
+
 /* server modal handler */
 const server_modal = document.getElementById('info');
 const server_span_close = document.getElementsByClassName("cancel")[0];
+/* End of server modal hooks*/
 
 server_span_close.onclick = function() {
     server_modal.style.display = "none";
@@ -272,5 +287,8 @@ server_span_close.onclick = function() {
 window.onclick = function(event) {
     if (event.target == server_modal) {
         server_modal.style.display = "none";
+    }
+    if (event.target == com_mod_background) {
+      com_mod_container.classList.toggle('out');
     }
 }
